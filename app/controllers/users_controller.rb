@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   # provided, then returns the full list of users
   # @todo add pagination here
   def index
-    status = filter_params
+    status = params[:status]
     users = status == 'archived' || status == 'unarchived' ?
               User.where(status: status) : User.all
 
@@ -34,10 +34,6 @@ class UsersController < ApplicationController
   private
   def status_params
     jsonapi_deserialize(params, only: [:status, :user_id]).symbolize_keys
-  end
-
-  def filter_params
-    params.require(:status)
   end
 
 end
