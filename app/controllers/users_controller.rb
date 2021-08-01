@@ -4,6 +4,9 @@ class UsersController < ApplicationController
   include JSONAPI::Errors
   include JSONAPI::Deserialization
 
+  # Change the +status+ of the specified user +user_id+
+  # @return the user if the status was successfully updated or an exception
+  # in any other case.
   def change_status
     status_change = status_params
     user = Users::ArchiveManager.perform_operation(action: status_change[:status],
@@ -16,16 +19,16 @@ class UsersController < ApplicationController
     end
   end
 
+  # List the users based in the +status+ desired
+  # @return the users filtering by archived or unarchived if any og those are
+  # provided, then returns the full list of users
+  # @todo add pagination here
   def index
     status = filter_params
-    case status
-    when 'archived'
-      render jsonapi: User.where(status: status)
-    when 'unarchived'
-      render jsonapi: User.where(status: status)
-    else
-      render jsonapi: User.all
-    end
+    users = status == 'archived' || status == 'unarchived' ?
+              User.where(status: status) : User.all
+
+    render jsonapi: users
   end
 
   private

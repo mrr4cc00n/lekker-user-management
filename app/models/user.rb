@@ -12,7 +12,8 @@ class User < ApplicationRecord
     uniqueness: true
 
   private
+  # Triggered before a user is destroyed, sends a notification via email to the user
   def notify_user_deletion
-    UserMailer.operation_performed(user_email: self.email, action: :deleted).deliver_now
+    UserMailer.operation_performed(user_email: self.email, action: 'deleted').deliver_now
   end
 end

@@ -1,6 +1,9 @@
 module Users
   class ArchiveManager
 
+    # Performs the change status operation (+action+) over the specified user +user_id+, triggered by
+    # +current_user+, notifies the user +user_id+ via email, and generate a new metric +UserOperation+
+    # @return the user after the changes
     def self.perform_operation(user_id:, current_user:, action:)
       actions = ['archived', 'unarchived']
       return nil if current_user.id == user_id.to_i || !actions.include?(action)
