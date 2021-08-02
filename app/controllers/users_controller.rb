@@ -8,9 +8,8 @@ class UsersController < ApplicationController
   # @return the user if the status was successfully updated or an exception
   # in any other case.
   def change_status
-    status_change = status_params
-    user = Users::ArchiveManager.perform_operation(action: status_change[:status],
-                                                   user_id: status_change[:user_id],
+    user = Users::ArchiveManager.perform_operation(action: params[:status],
+                                                   user_id: params[:user_id],
                                                    current_user: @user)
     if user.nil?
       render json: { error: 'unauthorized action' }, status: :unauthorized
@@ -29,11 +28,6 @@ class UsersController < ApplicationController
               User.where(status: status) : User.all
 
     render jsonapi: users
-  end
-
-  private
-  def status_params
-    jsonapi_deserialize(params, only: [:status, :user_id]).symbolize_keys
   end
 
 end
